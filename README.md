@@ -1,59 +1,68 @@
-# CRUD de Transações Financeiras
+# 💰 Gestor Financeiro
 
-## Descrição
-Aplicativo web desenvolvido para gerenciar transações financeiras, permitindo o cadastro, listagem, edição e exclusão de receitas e despesas. O projeto é composto por um frontend em Angular, backend em PHP (Laravel) e banco de dados PostgreSQL.
-
----
-
-## Tecnologias Utilizadas
-- **Frontend:** Angular 16+
-- **Backend:** PHP (Laravel 11)
-- **Banco de Dados:** PostgreSQL
+**Gestor Financeiro** é um sistema completo de gestão de finanças pessoais. Com ele, você pode controlar receitas e despesas, visualizar seu balanço financeiro e manter suas finanças organizadas de forma prática e moderna.
 
 ---
 
-## Estrutura do Projeto
-```
-banco => Scripts SQL para criação do banco de dados
-backend => Código do backend (Laravel)
-frontend => Código do frontend (Angular)
-# Instruções para rodar o projeto
+## 📌 Funcionalidades
 
-```
-
----
-
-## Configuração do Banco de Dados
-
-### 1. Criar o Banco de Dados
-```sql
-CREATE DATABASE desafio_uitec;
-```
-
-### 2. Executar o Script SQL
-```bash
-psql -U postgres -d desafio_uitec -f banco/script.sql
-```
-
-*Certifique-se de ajustar o nome do usuário e senha conforme sua configuração do PostgreSQL.*
+- 👤 Autenticação de usuários (login e registro)  
+- 📊 Dashboard com resumo financeiro  
+- 📋 Cadastro de transações (receitas e despesas)  
+- 🏷️ Categorização de transações  
+- 🔍 Listagem e filtragem por tipo  
+- 📝 Edição e exclusão de transações  
+- 💹 Cálculo automático de balanço  
+- 🛠️ API RESTful para integração total  
+- 🎨 Interface moderna com Angular Material  
+- ✅ Validações e mensagens de erro
 
 ---
 
-## Backend (Laravel)
+## 🛠️ Tecnologias Utilizadas
 
-### 1. Navegue até a pasta do backend:
+### Frontend (Angular)
+- Angular 16+
+- Angular Material
+- TypeScript
+- RxJS
+- SCSS
+
+### Backend (Laravel + PHP)
+- PHP 8+
+- Laravel 10+
+- Eloquent ORM
+- API RESTful
+- Sistema de autenticação com tokens
+
+### Banco de Dados
+- PostgreSQL 14+
+- Migrations e Seeders com Laravel
+
+---
+
+## 🚀 Como Rodar o Projeto
+
+### 🔹 Pré-requisitos
+Certifique-se de ter instalado:
+
+- [Node.js](https://nodejs.org/) e Angular CLI  
+- [PHP 8+](https://www.php.net/) e Composer  
+- [PostgreSQL](https://www.postgresql.org/)
+
+---
+
+### 🔹 Backend (Laravel)
+
 ```bash
 cd backend
-```
-
-### 2. Instale as dependências do Laravel:
-```bash
 composer install
+cp .env.example .env
 ```
 
-### 3. Configure o arquivo `.env`:
-Copie o `.env.example` para `.env` e atualize as configurações do banco de dados:
-```bash
+Configure o `.env` com os dados do seu banco:
+
+```env
 DB_CONNECTION=pgsql
 DB_HOST=127.0.0.1
 DB_PORT=5432
@@ -62,79 +71,103 @@ DB_USERNAME=postgres
 DB_PASSWORD=sua_senha
 ```
 
-### 4. Gere a chave da aplicação:
 ```bash
 php artisan key:generate
-```
-
-### 5. Rode as migrações e seeders (se aplicável):
-```bash
 php artisan migrate --seed
-```
-
-### 6. Inicie o servidor Laravel:
-```bash
 php artisan serve
 ```
-O backend estará disponível em: [http://localhost:8000](http://localhost:8000)
 
 ---
 
-## Frontend (Angular)
+### 🔹 Banco de Dados (PostgreSQL)
 
-### 1. Navegue até a pasta do frontend:
+```sql
+CREATE DATABASE desafio_uitec;
+```
+
+Importe os dados iniciais (opcional):
+
+```bash
+psql -U postgres -d desafio_uitec -f banco/script.sql
+```
+
+---
+
+### 🔹 Frontend (Angular)
+
 ```bash
 cd frontend
-```
-
-### 2. Instale as dependências do Angular:
-```bash
 npm install
+ng serve --open
 ```
 
-### 3. Inicie o servidor Angular:
-```bash
-ng serve
+Acesse em: [http://localhost:4200](http://localhost:4200)
+
+---
+
+## 📂 Estrutura do Projeto
+
 ```
-O frontend estará disponível em: [http://localhost:4200](http://localhost:4200)
+Gestor-Financeiro/
+├── banco/              # Scripts SQL
+├── backend/            # Código Laravel
+│   ├── app/
+│   │   ├── Models/     # Eloquent Models
+│   │   ├── Http/       # Controllers e Middlewares
+│   ├── database/       # Migrations e Seeders
+│   ├── routes/         # Rotas da API
+├── frontend/           # Código Angular
+│   ├── src/app/
+│   │   ├── components/ # Componentes
+│   │   ├── services/   # Serviços
+```
 
 ---
 
-## Endpoints da API
+## 🌐 Endpoints da API
 
-### Categorias
-- `GET /api/categorias` - Listar categorias
+### 📁 Categorias
 
-### Transações
-- `GET /api/transacoes` - Listar transações
-- `POST /api/transacoes` - Criar nova transação
-- `PUT /api/transacoes/{id}` - Atualizar transação existente
-- `DELETE /api/transacoes/{id}` - Excluir transação
+```
+GET /api/categorias
+```
 
----
+### 💸 Transações
 
-## Funcionalidades
-
-- ✅ Cadastro de transações (receitas e despesas)
-- ✅ Filtragem por tipo de transação
-- ✅ Edição e exclusão de transações
-- ✅ Validação de campos obrigatórios
-- ✅ Integração com PostgreSQL
+```
+GET    /api/transacoes
+GET    /api/transacoes/{id}
+POST   /api/transacoes
+PUT    /api/transacoes/{id}
+DELETE /api/transacoes/{id}
+```
 
 ---
 
-## Possíveis Erros e Correções
-- **Erro de conexão com o banco:** Verifique o arquivo `.env` no backend.
-- **API não responde:** Verifique se o servidor do Laravel está rodando.
-- **Problemas no Angular:** Execute `npm install` para garantir que todas as dependências estão instaladas.
+## ❗ Possíveis Erros e Soluções
+
+| Erro | Solução |
+|------|---------|
+| ❌ Erro de conexão com o banco | Verifique `.env` do backend |
+| 🚫 API não responde | Verifique se o Laravel está rodando |
+| ⚠️ Angular com erro | Execute `npm install` |
+| 📉 Erro no balanço | Verifique `calcularResumoManualmente()` no `transacao-list.component.ts` |
 
 ---
 
-## Contribuições
-Sinta-se à vontade para abrir issues ou enviar pull requests para melhorias.
+## 📈 Melhorias Futuras
+
+- 📱 Aplicativo mobile (React Native)
+- 🔔 Notificações e lembretes
+- 📤 Exportação em PDF/CSV
+- 🔄 Importação de extratos bancários
 
 ---
 
-## Licença
-Este projeto está sob a licença MIT.
+## 📝 Licença
 
+Este projeto está sob a licença [MIT](LICENSE).
+
+---
+
+## 💡 Desenvolvido por: Deryk Silva | @dkode.js
