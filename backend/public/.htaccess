@@ -1,0 +1,51 @@
+# Habilitar o suporte para reescrita de URL
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
+
+    RewriteEngine On
+
+    # Handle Authorization Header
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Redirect Trailing Slashes If Not A Folder...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} (.+)/$
+    RewriteRule ^ %1 [L,R=301]
+
+    # Send Requests To Front Controller...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L]
+    
+    # Tratar requisições OPTIONS para CORS
+    RewriteCond %{REQUEST_METHOD} OPTIONS
+    RewriteRule ^(.*)$ $1 [R=200,L]
+</IfModule>
+
+# Adicionar cabeçalhos CORS
+<IfModule mod_headers.c>
+    # Sempre adicionar cabeçalhos CORS
+    Header always set Access-Control-Allow-Origin "http://localhost:4200"
+    Header always set Access-Control-Allow-Methods "GET, POST, OPTIONS, PUT, DELETE, PATCH"
+    Header always set Access-Control-Allow-Headers "X-Requested-With, Content-Type, X-Token-Auth, Authorization, Accept, Origin, X-CSRF-TOKEN, X-XSRF-TOKEN"
+    Header always set Access-Control-Allow-Credentials "true"
+    Header always set Access-Control-Max-Age "1728000"
+    
+    # Remover o cabeçalho Vary para compatibilidade com alguns navegadores
+    Header always set Access-Control-Allow-Origin "http://localhost:4200" env=CORS_HOST
+    Header always set Vary "Accept-Encoding"
+</IfModule>
+
+# Desativar ETags para melhor performance
+<IfModule mod_headers.c>
+    Header unset ETag
+</IfModule>
+FileETag None
+
+# Permitir compressão
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css application/javascript application/json
+</IfModule>
