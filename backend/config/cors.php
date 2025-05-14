@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],  // Métodos HTTP permitidos
 
-    'allowed_origins' => ['http://localhost:4200'],  // URL específica do seu frontend Angular
+    'allowed_origins' => ['*'],
 
     'allowed_origins_patterns' => [],  // Padrões de URL (regex)
 
