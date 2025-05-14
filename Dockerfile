@@ -38,16 +38,12 @@ RUN ln -sf /dev/stdout /var/log/nginx/access.log \
 # Definir permissões
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Expor porta 80
-EXPOSE 80
-
-# Script de inicialização para executar nginx e php-fpm
-COPY docker/start.sh /usr/local/bin/start.sh
-RUN chmod +x /usr/local/bin/start.sh
-CMD ["/usr/local/bin/start.sh"]
-
 # Configurar arquivo .env
 RUN cp .env.example .env
+
+# Definir variáveis de ambiente para o banco de dados SQLite
+ENV DB_CONNECTION=sqlite
+ENV DB_DATABASE=/var/www/html/database/database.sqlite
 
 # Configuração para SQLite
 RUN touch database/database.sqlite
@@ -60,3 +56,14 @@ RUN php artisan migrate --path=database/migrations/0001_01_01_000000_create_user
     php artisan migrate --path=database/migrations/2025_02_03_153937_create_transacaos_table.php --force && \
     php artisan migrate --path=database/migrations/2025_02_03_183935_create_categorias_table.php --force && \
     php artisan migrate --path=database/migrations/2025_05_12_222839_create_personal_access_tokens_table.php --force
+
+# Executar o seeder de categorias
+RUN php artisan db:seed --class=CategoriaSeeder --force
+
+# Expor porta 80
+EXPOSE 80
+
+# Script de inicialização para executar nginx e php-fpm
+COPY docker/start.sh /usr/local/bin/start.sh
+RUN chmod +x /usr/local/bin/start.sh
+CMD ["/usr/local/bin/start.sh"]
