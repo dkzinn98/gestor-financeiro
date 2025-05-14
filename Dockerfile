@@ -58,7 +58,7 @@ RUN php artisan migrate --path=database/migrations/0001_01_01_000000_create_user
     php artisan migrate --path=database/migrations/2025_05_12_222839_create_personal_access_tokens_table.php --force
 
 # Executar o seeder de categorias
-RUN php artisan db:seed --class=CategoriaSeeder --force
+RUN php artisan db:seed --force
 
 # Expor porta 80
 EXPOSE 80
