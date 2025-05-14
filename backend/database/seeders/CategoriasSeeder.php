@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\Categoria;
 
-class CategoriaSeeder extends Seeder
+class CategoriasSeeder extends Seeder
 {
     public function run()
     {
