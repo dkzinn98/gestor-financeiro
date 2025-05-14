@@ -41,17 +41,32 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     // IMPORTANTE: Rotas específicas ANTES do apiResource
-    Route::get('transacoes/dashboard', [TransacaoController::class, 'summary']);
-    Route::get('transacoes/recent', [TransacaoController::class, 'recent']);
+    Route::get('transacoes/dashboard', [TransacaoController::class, 'summary'])
+         ->name('api.transacoes.dashboard');  // Nome personalizado
+    Route::get('transacoes/recent', [TransacaoController::class, 'recent'])
+         ->name('api.transacoes.recent');     // Nome personalizado
     
-    // Rota de recursos para transações (CRUD completo)
-    Route::apiResource('transacoes', TransacaoController::class);
+    // Rota de recursos para transações (CRUD completo) com nomes personalizados
+    Route::apiResource('transacoes', TransacaoController::class)->names([
+        'index' => 'api.transacoes.index',
+        'store' => 'api.transacoes.store',
+        'show' => 'api.transacoes.show',
+        'update' => 'api.transacoes.update',
+        'destroy' => 'api.transacoes.destroy',
+    ]);
     
     // Adicione aqui outras rotas que requerem autenticação
 });
 
 // Rotas de categoria - publicamente acessíveis
-Route::get('categorias', [CategoriaController::class, 'index']);
+Route::get('categorias', [CategoriaController::class, 'index'])
+     ->name('api.categorias.index');  // Nome personalizado
 
 // Se precisar de operações de CRUD completas para categorias, descomente:
-// Route::apiResource('categorias', CategoriaController::class);
+// Route::apiResource('categorias', CategoriaController::class)->names([
+//     'index' => 'api.categorias.index',
+//     'store' => 'api.categorias.store',
+//     'show' => 'api.categorias.show',
+//     'update' => 'api.categorias.update',
+//     'destroy' => 'api.categorias.destroy',
+// ]);
