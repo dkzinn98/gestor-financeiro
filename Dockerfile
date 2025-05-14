@@ -48,3 +48,7 @@ CMD ["/usr/local/bin/start.sh"]
 
 # Configurar arquivo .env
 RUN cp .env.example .env
+
+# Configuração para SQLite
+RUN touch database/database.sqlite
+RUN chmod -R 777 database

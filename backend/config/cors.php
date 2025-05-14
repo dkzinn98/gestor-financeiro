@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],  // Métodos HTTP permitidos
 
-    'allowed_origins' => ['*'],
+    'allowed_origins' => ['https://gestor-financeiro-dk.vercel.app'],
 
     'allowed_origins_patterns' => [],  // Padrões de URL (regex)
 
