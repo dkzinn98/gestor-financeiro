@@ -38,9 +38,6 @@ RUN ln -sf /dev/stdout /var/log/nginx/access.log \
 # Definir permissões
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Gerar chave da aplicação
-RUN php artisan key:generate
-
 # Expor porta 80
 EXPOSE 80
 
@@ -48,3 +45,7 @@ EXPOSE 80
 COPY docker/start.sh /usr/local/bin/start.sh
 RUN chmod +x /usr/local/bin/start.sh
 CMD ["/usr/local/bin/start.sh"]
+x
+
+# Configurar arquivo .env
+RUN cp .env.example .env
