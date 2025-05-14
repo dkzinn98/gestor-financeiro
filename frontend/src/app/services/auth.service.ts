@@ -18,7 +18,7 @@ interface AuthResponse {
 })
 export class AuthService {
   // URL base - agora usando o environment
-  private apiUrl = `${environment.apiUrl}`;
+  private apiUrl = environment.apiUrl;
   private tokenKey = 'auth_token';
   private userKey = 'auth_user';
 
@@ -42,8 +42,8 @@ export class AuthService {
     }
 
     return {
-      headers: new HttpHeaders(headers),
-      withCredentials: true
+      headers: new HttpHeaders(headers)
+      // Removendo withCredentials para evitar problemas CORS
     };
   }
 
@@ -79,7 +79,7 @@ export class AuthService {
 
   // Login de usuário
   login(data: any): Observable<AuthResponse> {
-    console.log('Enviando dados de login:', data);
+    console.log('Enviando dados de login:', { url: `${this.apiUrl}/login`, data });
     
     return this.http.post<AuthResponse>(`${this.apiUrl}/login`, data, this.getHttpOptions())
       .pipe(
@@ -116,6 +116,12 @@ export class AuthService {
 
   // Método para fazer logout e redirecionar
   doLogout(): void {
+    this.clearAuthData();
+    this.router.navigate(['/login']);
+    
+    // Comentamos o logout via API porque pode falhar se não houver conexão
+    // E o importante é limpar os dados locais
+    /*
     this.logout().subscribe({
       next: () => {
         this.clearAuthData();
@@ -126,6 +132,7 @@ export class AuthService {
         this.router.navigate(['/login']);
       }
     });
+    */
   }
 
   // Obter dados do usuário atual do backend
@@ -137,6 +144,10 @@ export class AuthService {
         }),
         catchError(error => {
           console.error('Erro ao obter dados do usuário:', error);
+          if (error.status === 401) {
+            this.clearAuthData();
+            this.router.navigate(['/login']);
+          }
           return throwError(() => error);
         })
       );

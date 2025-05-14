@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { Router, ActivatedRoute } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -36,6 +37,13 @@ export class LoginComponent implements OnInit {
     if (this.authService.isLoggedIn()) {
       this.router.navigate([this.returnUrl]);
     }
+    
+    // Verificar se há um email armazenado do "lembrar-me"
+    const rememberedEmail = localStorage.getItem('rememberedEmail');
+    if (rememberedEmail) {
+      this.loginData.email = rememberedEmail;
+      this.loginData.remember = true;
+    }
   }
 
   login() {
@@ -62,14 +70,19 @@ export class LoginComponent implements OnInit {
     
     console.log('Enviando dados para login:', this.loginData);
     
-    this.authService.login(this.loginData).subscribe({
+    // Enviar apenas email e senha (não enviar propriedade remember)
+    const loginPayload = {
+      email: this.loginData.email,
+      password: this.loginData.password
+    };
+    
+    this.authService.login(loginPayload).subscribe({
       next: (response) => {
         console.log('Login bem-sucedido:', response);
         
         // Se a opção "lembrar-me" estiver ativada, armazenar essa preferência
         if (this.loginData.remember) {
           localStorage.setItem('rememberUser', 'true');
-          // Salvar o email do usuário (opcional)
           localStorage.setItem('rememberedEmail', this.loginData.email);
         } else {
           localStorage.removeItem('rememberUser');
@@ -79,22 +92,22 @@ export class LoginComponent implements OnInit {
         // Sucesso no login, redirecionar para a página solicitada ou principal
         this.router.navigate([this.returnUrl]);
       },
-      error: (error) => {
+      error: (error: HttpErrorResponse) => {
         this.isLoading = false;
         console.error('Erro completo no login:', error);
         
         // Tratamento de erros específicos
         if (error.status === 401) {
           this.errorMessage = 'Email ou senha incorretos.';
+          
+          // Limpar senha em caso de erro de autenticação
+          this.loginData.password = '';
         } else if (error.status === 422) {
           // Tratando erros de validação
           if (error.error && error.error.errors) {
-            // Usando tipagem mais segura para evitar problemas com arrays
             const errorMessages: string[] = [];
             
-            // Usando Object.entries para iterar com segurança
             Object.entries(error.error.errors).forEach(([field, messages]) => {
-              // Verificando se messages é um array e tem pelo menos um elemento
               if (Array.isArray(messages) && messages.length > 0) {
                 errorMessages.push(messages[0] as string);
               } else if (typeof messages === 'string') {
@@ -109,10 +122,14 @@ export class LoginComponent implements OnInit {
             this.errorMessage = 'Dados inválidos. Por favor, verifique as informações.';
           }
         } else if (error.status === 0) {
-          this.errorMessage = 'Não foi possível conectar ao servidor. Verifique sua conexão de internet.';
+          // Erro de conectividade com o servidor
+          this.errorMessage = 'Não foi possível conectar ao servidor. Verifique sua conexão de internet ou se o servidor está disponível.';
         } else {
           this.errorMessage = `Erro ao fazer login (${error.status}). Por favor, tente novamente mais tarde.`;
         }
+      },
+      complete: () => {
+        this.isLoading = false;
       }
     });
   }
@@ -121,5 +138,30 @@ export class LoginComponent implements OnInit {
   resetForm() {
     this.loginData = { email: '', password: '', remember: false };
     this.errorMessage = null;
+  }
+  
+  // Novo método para testar a conexão com o backend
+  testarConexao() {
+    this.isLoading = true;
+    this.errorMessage = null;
+    
+    // Faz uma requisição simples para verificar se o backend está acessível
+    fetch(`${this.authService['apiUrl']}/ping`)
+      .then(response => {
+        if (response.ok) {
+          console.log('Conexão com o backend OK');
+          this.errorMessage = 'Conexão com o servidor estabelecida com sucesso!';
+        } else {
+          console.error('Erro na conexão com o backend:', response.status);
+          this.errorMessage = `Não foi possível conectar ao servidor (${response.status}).`;
+        }
+      })
+      .catch(error => {
+        console.error('Falha na conexão com o backend:', error);
+        this.errorMessage = 'Falha na conexão com o servidor. Verifique sua conexão de internet ou se o servidor está disponível.';
+      })
+      .finally(() => {
+        this.isLoading = false;
+      });
   }
 }

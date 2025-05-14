@@ -15,7 +15,7 @@ class Kernel extends HttpKernel
      */
     protected $middleware = [
         \App\Http\Middleware\TrustProxies::class,
-        \App\Http\Middleware\Cors::class, // Adicionado o middleware CORS personalizado
+        \App\Http\Middleware\Cors::class, // Middleware CORS personalizado com prioridade máxima
         \Illuminate\Http\Middleware\HandleCors::class,
         \Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance::class,
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
@@ -34,12 +34,12 @@ class Kernel extends HttpKernel
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-            // Substitua VerifyCsrfToken pelo novo middleware:
-            \App\Http\Middleware\DisabledCsrfToken::class,
+            \App\Http\Middleware\DisabledCsrfToken::class, // CSRF desabilitado conforme sua configuração
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
 
         'api' => [
+            \App\Http\Middleware\Cors::class, // Adicionando CORS antes do middleware Sanctum
             \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             'throttle:api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
@@ -75,7 +75,7 @@ class Kernel extends HttpKernel
      * @var array<int, class-string>
      */
     protected $middlewarePriority = [
-        \App\Http\Middleware\Cors::class, // Adicionado CORS como prioridade máxima
+        \App\Http\Middleware\Cors::class, // CORS com prioridade máxima
         \Illuminate\Http\Middleware\HandleCors::class,
         \Illuminate\Cookie\Middleware\EncryptCookies::class,
         \Illuminate\Session\Middleware\StartSession::class,
