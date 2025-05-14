@@ -45,7 +45,6 @@ EXPOSE 80
 COPY docker/start.sh /usr/local/bin/start.sh
 RUN chmod +x /usr/local/bin/start.sh
 CMD ["/usr/local/bin/start.sh"]
-x
 
 # Configurar arquivo .env
 RUN cp .env.example .env
