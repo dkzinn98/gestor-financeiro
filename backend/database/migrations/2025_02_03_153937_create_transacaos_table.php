@@ -10,7 +10,7 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void {
-        Schema::create('transacaos', function (Blueprint $table) {
+        Schema::create('transacoes ', function (Blueprint $table) {
             $table->id();
             $table->string('descricao');
             $table->decimal('valor', 10, 2); // Verifique se essa linha existe
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('transacaos');
+        Schema::dropIfExists('transacoes ');
     }
 };
