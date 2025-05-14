@@ -1,0 +1,58 @@
+<form (ngSubmit)="register()" #registerForm="ngForm">
+  <h2>Cadastre-se</h2>
+  
+  <div class="form-group">
+    <label for="name">Nome completo</label>
+    <input 
+      type="text" 
+      id="name" 
+      name="name" 
+      [(ngModel)]="userData.name" 
+      required 
+      placeholder="Digite seu nome completo">
+  </div>
+  
+  <div class="form-group">
+    <label for="email">E-mail</label>
+    <input 
+      type="email" 
+      id="email" 
+      name="email" 
+      [(ngModel)]="userData.email" 
+      required 
+      placeholder="Digite seu e-mail">
+  </div>
+  
+  <div class="form-group">
+    <label for="password">Senha</label>
+    <input 
+      type="password" 
+      id="password" 
+      name="password" 
+      [(ngModel)]="userData.password" 
+      required 
+      placeholder="Crie uma senha segura">
+  </div>
+  
+  <div class="form-group">
+    <label for="password_confirmation">Confirmar senha</label>
+    <input 
+      type="password" 
+      id="password_confirmation" 
+      name="password_confirmation" 
+      [(ngModel)]="userData.password_confirmation" 
+      required 
+      placeholder="Repita sua senha">
+  </div>
+  
+  <button type="submit" [ngClass]="{'loading': isLoading}">
+    {{ isLoading ? '' : 'Cadastrar' }}
+  </button>
+  
+  <div *ngIf="errorMessage" class="error-message" [innerHTML]="errorMessage">
+  </div>
+  
+  <div class="login-link">
+    <p>Já tem uma conta? <a routerLink="/login">Faça login</a></p>
+  </div>
+</form>

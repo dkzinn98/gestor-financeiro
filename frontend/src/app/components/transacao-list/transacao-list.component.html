@@ -1,0 +1,107 @@
+<div class="dashboard-container">
+  <h1 class="dashboard-title">Painel de Controle</h1>
+
+  <div *ngIf="isLoading" class="loading-container">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Carregando dados...</p>
+  </div>
+
+  <div *ngIf="!isLoading" class="dashboard-content">
+      <div class="summary-cards">
+          <mat-card class="summary-card income-card">
+              <mat-card-content>
+                  <div class="card-icon">
+                      <mat-icon>arrow_upward</mat-icon>
+                  </div>
+                  <div class="card-info">
+                      <h3>Receitas</h3>
+                      <p class="amount">{{ formatarMoeda(resumo.totalIncome) }}</p>
+                  </div>
+              </mat-card-content>
+          </mat-card>
+
+          <mat-card class="summary-card expense-card">
+              <mat-card-content>
+                  <div class="card-icon">
+                      <mat-icon>arrow_downward</mat-icon>
+                  </div>
+                  <div class="card-info">
+                      <h3>Despesas</h3>
+                      <p class="amount">{{ formatarMoeda(resumo.totalExpense) }}</p>
+                  </div>
+              </mat-card-content>
+          </mat-card>
+
+          <mat-card class="summary-card balance-card" [ngClass]="{'negative': resumo.balance < 0}">
+              <mat-card-content>
+                  <div class="card-icon">
+                      <mat-icon>account_balance_wallet</mat-icon>
+                  </div>
+                  <div class="card-info">
+                      <h3>Balanço</h3>
+                      <p class="amount">{{ formatarMoeda(resumo.balance) }}</p>
+                  </div>
+              </mat-card-content>
+          </mat-card>
+      </div>
+
+      <mat-card class="recent-transactions-card">
+          <mat-card-header>
+              <mat-card-title>Transações Recentes</mat-card-title>
+              <div class="spacer"></div>
+          </mat-card-header>
+
+          <mat-card-content>
+              <div *ngIf="transacoesRecentes.length === 0" class="empty-transactions">
+                  <mat-icon>info</mat-icon>
+                  <p>Nenhuma transação encontrada.</p>
+              </div>
+
+              <div *ngFor="let transaction of transacoesRecentes" class="transaction-item" [ngClass]="transaction.type">
+                  <div class="transaction-icon">
+                      <mat-icon *ngIf="transaction.type === 'receita'">add_circle</mat-icon>
+                      <mat-icon *ngIf="transaction.type === 'despesa'">remove_circle</mat-icon>
+                  </div>
+                  <div class="transaction-details">
+                      <p class="transaction-description">{{ transaction.description }}</p>
+                      <p class="transaction-category">{{ transaction.category_name }}</p>
+                  </div>
+                  <div class="transaction-info">
+                      <p class="transaction-amount"
+                          [ngClass]="{'negative': transaction.type === 'despesa', 'positive': transaction.type === 'receita'}">
+                          {{ formatarMoeda(transaction.amount) }}
+                      </p>
+                      <p class="transaction-date">{{ formatarData(transaction.transaction_date) }}</p>
+                  </div>
+                  <div class="transaction-actions">
+                      <button mat-icon-button color="primary" (click)="editarTransacao(transaction)" title="Editar">
+                          <mat-icon>edit</mat-icon>
+                      </button>
+                      <button mat-icon-button color="warn" (click)="deletarTransacao(transaction.id)" title="Excluir">
+                          <mat-icon>delete</mat-icon>
+                      </button>
+                  </div>
+              </div>
+          </mat-card-content>
+      </mat-card>
+
+      <mat-card class="quick-actions-card">
+          <mat-card-header>
+              <mat-card-title>Ações Rápidas</mat-card-title>
+          </mat-card-header>
+
+          <mat-card-content>
+              <div class="action-buttons">
+                  <a mat-raised-button color="primary" routerLink="/nova-transacao" [queryParams]="{ tipo: 'receita' }">
+                      <mat-icon>add_circle</mat-icon>
+                      Nova Receita
+                  </a>
+                  <a mat-raised-button color="warn" routerLink="/nova-transacao" [queryParams]="{ tipo: 'despesa' }">
+                      <mat-icon>remove_circle</mat-icon>
+                      Nova Despesa
+                  </a>
+              </div>
+          </mat-card-content>
+      </mat-card>
+  </div>
+</div>

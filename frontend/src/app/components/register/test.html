@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Teste de Registro</title>
+</head>
+<body>
+    <h1>Cadastro de Teste</h1>
+    <form action="http://localhost:8000/register" method="POST">
+        <div>
+            <label>Nome:</label>
+            <input type="text" name="name" value="Teste">
+        </div>
+        <div>
+            <label>Email:</label>
+            <input type="email" name="email" value="teste@email.com">
+        </div>
+        <div>
+            <label>Senha:</label>
+            <input type="password" name="password" value="password123">
+        </div>
+        <div>
+            <label>Confirmar Senha:</label>
+            <input type="password" name="password_confirmation" value="password123">
+        </div>
+        <button type="submit">Cadastrar</button>
+    </form>
+</body>
+</html>

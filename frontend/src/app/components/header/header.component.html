@@ -1,0 +1,15 @@
+<header class="app-header">
+  <div class="logo">
+    <a routerLink="/">Gestor Financeiro</a>
+  </div>
+  <nav>
+    <ul>
+      <li><a routerLink="/">Dashboard</a></li>
+      <li><a routerLink="/nova-transacao">Nova Transação</a></li>
+    </ul>
+  </nav>
+  <div class="user-actions">
+    <span *ngIf="userName">Olá, {{ userName }}</span>
+    <button class="logout-btn" (click)="logout()">Sair</button>
+  </div>
+</header>

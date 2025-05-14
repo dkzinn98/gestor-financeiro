@@ -1,0 +1,284 @@
+.dashboard-container {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.dashboard-title {
+  margin-bottom: 24px;
+  font-size: 28px;
+  font-weight: 500;
+  color: #333;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 0;
+
+  p {
+    margin-top: 16px;
+    color: #666;
+  }
+}
+
+.dashboard-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.summary-card {
+  transition: transform 0.3s, box-shadow 0.3s;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  }
+
+  mat-card-content {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+  }
+}
+
+.card-icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  margin-right: 16px;
+
+  mat-icon {
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.card-info {
+  h3 {
+    font-size: 16px;
+    margin: 0 0 8px 0;
+    color: #666;
+  }
+
+  .amount {
+    font-size: 24px;
+    font-weight: 500;
+    margin: 0;
+  }
+}
+
+// Estilos para o cartão de receita
+.income-card .card-icon {
+  background-color: rgba(76, 175, 80, 0.1);
+  color: #4caf50;
+}
+
+.income-card .card-info .amount {
+  color: #4caf50;
+}
+
+// Estilos para o cartão de despesa
+.expense-card .card-icon {
+  background-color: rgba(244, 67, 54, 0.1);
+  color: #f44336;
+}
+
+.expense-card .card-info .amount {
+  color: #f44336;
+}
+
+// Estilos para o cartão de saldo
+.balance-card .card-icon {
+  background-color: rgba(33, 150, 243, 0.1);  // Azul mais neutro
+  color: #2196f3;  // Azul para o ícone
+}
+
+.balance-card .card-info .amount {
+  color: #2196f3;  // Azul para valores positivos
+}
+
+// Estilos para o cartão de saldo quando o saldo é negativo
+.balance-card.negative {
+  .card-icon {
+    background-color: rgba(244, 67, 54, 0.1);
+    color: #f44336;
+  }
+
+  .card-info .amount {
+    color: #f44336;  // Vermelho para valores negativos
+  }
+}
+
+.recent-transactions-card,
+.quick-actions-card {
+  mat-card-header {
+    display: flex;
+    align-items: center;
+
+    .spacer {
+      flex: 1;
+    }
+  }
+}
+
+.empty-transactions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 0;
+  color: #888;
+
+  mat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    margin-bottom: 16px;
+  }
+}
+
+.transaction-item {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid #f0f0f0;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.transaction-icon {
+  margin-right: 16px;
+
+  mat-icon {
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.transaction-item.receita .transaction-icon {
+  color: #4caf50;
+}
+
+.transaction-item.despesa .transaction-icon {
+  color: #f44336;
+}
+
+.transaction-details {
+  flex: 1;
+
+  .transaction-description {
+    font-weight: 500;
+    margin: 0 0 4px 0;
+    color: #333;
+  }
+
+  .transaction-category {
+    font-size: 13px;
+    color: #777;
+    margin: 0;
+  }
+}
+
+.transaction-info {
+  text-align: right;
+
+  .transaction-amount {
+    font-weight: 500;
+    margin: 0 0 4px 0;
+
+    &.negative {
+      color: #f44336;
+    }
+
+    &.positive {
+      color: #4caf50;
+    }
+  }
+
+  .transaction-date {
+    font-size: 13px;
+    color: #777;
+    margin: 0;
+  }
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 16px;
+
+  a {
+    flex: 1;
+
+    mat-icon {
+      margin-right: 8px;
+    }
+  }
+}
+
+.spacer {
+  flex: 1;
+}
+
+@media (max-width: 768px) {
+  .summary-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+  }
+
+  .transaction-actions {
+    display: flex;
+    align-items: center;
+    margin-left: 8px;
+    
+    button {
+      margin-left: 4px;
+    }
+  }
+  
+  .transaction-item {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    border-bottom: 1px solid #f0f0f0;
+    
+    &:last-child {
+      border-bottom: none;
+    }
+    
+    &:hover {
+      background-color: #f9f9f9;
+      
+      .transaction-actions {
+        opacity: 1;
+      }
+    }
+  }
+  
+  /* Opcional: Você pode fazer os botões aparecerem apenas no hover */
+  .transaction-actions {
+    opacity: 0.3;
+    transition: opacity 0.2s;
+  }
+
+}

@@ -1,0 +1,101 @@
+.form-container {
+  max-width: 500px;
+  margin: 20px auto;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+button {
+  width: 48%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+mat-toolbar {
+  background-color: deeppink;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 10px;
+  margin-bottom: 20px;
+}
+
+mat-error {
+  color: red;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* Responsiv */
+@media (max-width: 600px) {
+  .form-container {
+    padding: 15px;
+  }
+
+  button {
+    width: 100%;
+  }
+
+  .button-group {
+    flex-direction: column;
+  }
+
+  .spacer {
+    flex: 1 1 auto;
+  }
+  
+  .form-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+  }
+  
+  .full-width {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+  
+  .button-group {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  
+  .loading-indicator {
+    margin: 20px auto;
+    max-width: 800px;
+  }
+  
+  .loading-text {
+    text-align: center;
+    margin-top: 10px;
+    color: #673ab7;
+  }
+  
+  .error-message {
+    max-width: 800px;
+    margin: 20px auto;
+    color: #f44336;
+  }
+
+}

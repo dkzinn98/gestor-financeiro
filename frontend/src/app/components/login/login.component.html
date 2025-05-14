@@ -1,0 +1,46 @@
+<form (ngSubmit)="login()" #loginForm="ngForm">
+  <h2>Bem-vindo de volta!</h2>
+  
+  <div class="form-group">
+    <label for="email">Email</label>
+    <input 
+      type="email" 
+      id="email" 
+      name="email" 
+      [(ngModel)]="loginData.email" 
+      required 
+      placeholder="Seu email">
+  </div>
+  
+  <div class="form-group">
+    <label for="password">Senha</label>
+    <input 
+      type="password" 
+      id="password" 
+      name="password" 
+      [(ngModel)]="loginData.password" 
+      required 
+      placeholder="Sua senha">
+  </div>
+  
+  <div class="remember-me">
+    <label>
+      <input 
+        type="checkbox" 
+        name="remember" 
+        [(ngModel)]="loginData.remember">
+      Lembrar-me
+    </label>
+  </div>
+  
+  <button type="submit" [ngClass]="{'loading': isLoading}">
+    {{ isLoading ? '' : 'Entrar' }}
+  </button>
+  
+  <div *ngIf="errorMessage" class="error-message" [innerHTML]="errorMessage">
+  </div>
+  
+  <div class="register-link">
+    <p>Não tem cadastro? <a routerLink="/register">Cadastre-se aqui</a></p>
+  </div>
+</form>
