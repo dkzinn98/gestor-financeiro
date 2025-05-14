@@ -24,9 +24,10 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www/html
 
 # Copiar código da aplicação
-COPY . /var/www/html
+COPY ./backend /var/www/html
 
 # Instalar dependências
+WORKDIR /var/www/html
 RUN composer install --optimize-autoloader --no-dev
 
 # Configurar nginx
