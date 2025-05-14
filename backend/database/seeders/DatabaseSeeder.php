@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             ImportSqlSeeder::class,
+            CategoriaSeeder::class, // Adicione essa linha
         ]);
     }
 }

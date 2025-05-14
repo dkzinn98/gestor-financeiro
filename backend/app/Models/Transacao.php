@@ -9,45 +9,32 @@ class Transacao extends Model
 {
     use HasFactory;
 
-    /**
-     * Nome da tabela associada ao modelo.
-     *
-     * @var string
-     */
-    protected $table = 'transacoes'; // Especifica o nome correto da tabela
+    // Especifica o nome da tabela correta (a que foi criada na migração)
+    protected $table = 'transacaos';
 
-    /**
-     * Indica se o modelo deve registrar automaticamente os timestamps.
-     *
-     * @var bool
-     */
-    public $timestamps = false; // Adiciona esta linha para desabilitar os timestamps
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
+    // Campos preenchíveis em massa
     protected $fillable = [
         'descricao',
         'valor',
         'tipo',
         'categoria_id',
-        'user_id',
-        'data_transacao'
+        'data_transacao',
+        'user_id'
     ];
 
-    /**
-     * Get the categoria that owns the transacao.
-     */
+    // Conversão de tipos
+    protected $casts = [
+        'valor' => 'float',
+        'data_transacao' => 'date',
+    ];
+
+    // Relação com a categoria
     public function categoria()
     {
         return $this->belongsTo(Categoria::class);
     }
 
-    /**
-     * Get the user that owns the transacao.
-     */
+    // Relação com o usuário
     public function user()
     {
         return $this->belongsTo(User::class);
