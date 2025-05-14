@@ -52,4 +52,11 @@ RUN cp .env.example .env
 # Configuração para SQLite
 RUN touch database/database.sqlite
 RUN chmod -R 777 database
-RUN php artisan migrate --force
+
+# Executar apenas migrações específicas que sabemos que funcionam
+RUN php artisan migrate --path=database/migrations/0001_01_01_000000_create_users_table.php --force && \
+    php artisan migrate --path=database/migrations/0001_01_01_000001_create_cache_table.php --force && \
+    php artisan migrate --path=database/migrations/0001_01_01_000002_create_jobs_table.php --force && \
+    php artisan migrate --path=database/migrations/2025_02_03_153937_create_transacaos_table.php --force && \
+    php artisan migrate --path=database/migrations/2025_02_03_183935_create_categorias_table.php --force && \
+    php artisan migrate --path=database/migrations/2025_05_12_222839_create_personal_access_tokens_table.php --force
