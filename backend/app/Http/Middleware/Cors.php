@@ -8,20 +8,17 @@ use Symfony\Component\HttpFoundation\Response;
 
 class Cors
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
     public function handle(Request $request, Closure $next): Response
     {
         // Lista de domínios permitidos
         $allowedOrigins = [
             'https://gestor-financeiro-dk.vercel.app',
             'http://localhost:4200',
-            'http://localhost:3000'
+            'http://localhost:8000',
+            'http://localhost:3000',
+            'http://127.0.0.1:4200',
+            'http://127.0.0.1:8000',
+            'http://127.0.0.1:3000'
         ];
         
         $origin = $request->header('Origin');

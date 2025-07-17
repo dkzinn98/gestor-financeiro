@@ -15,20 +15,26 @@ return [
     |
     */
 
-    'paths' => ['*'],  // Todas as rotas
+    'paths' => ['api/*', 'sanctum/csrf-cookie'],
 
-    'allowed_methods' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],  // Métodos HTTP permitidos
+    'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['https://gestor-financeiro-dk.vercel.app'],
+    'allowed_origins' => [
+        'https://gestor-financeiro-dk.vercel.app',
+        'http://localhost:4200',
+        'http://localhost:8000',
+        'http://127.0.0.1:4200',
+        'http://127.0.0.1:8000'
+    ],
 
-    'allowed_origins_patterns' => [],  // Padrões de URL (regex)
+    'allowed_origins_patterns' => [],
 
-    'allowed_headers' => ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'X-CSRF-TOKEN'],  // Cabeçalhos permitidos
+    'allowed_headers' => ['*'],
 
-    'exposed_headers' => [],  // Cabeçalhos expostos
+    'exposed_headers' => [],
 
-    'max_age' => 3600,  // 1 hora de cache para preflight
+    'max_age' => 0,
 
-    'supports_credentials' => true,  // Necessário para autenticação com cookies/sessões
+    'supports_credentials' => false,
 
 ];

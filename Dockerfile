@@ -1,10 +1,6 @@
 FROM php:8.2-fpm
 
-<<<<<<< HEAD
 # Install system dependencies
-=======
-# Instalar dependências (adicionando libpq-dev para PostgreSQL)
->>>>>>> e03ce5d4a7cf4749095a10ab43be224a455572d0
 RUN apt-get update && apt-get install -y \
     git \
     curl \
@@ -21,38 +17,33 @@ RUN apt-get update && apt-get install -y \
 # Install PHP extensions
 RUN docker-php-ext-install pdo pdo_pgsql mbstring exif pcntl bcmath gd
 
-<<<<<<< HEAD
-# Install Composer
-=======
-# Instalar extensões PHP (mudando para PostgreSQL)
-RUN docker-php-ext-install pdo pdo_pgsql mbstring exif pcntl bcmath gd
-
-# Obter Composer mais recente
->>>>>>> e03ce5d4a7cf4749095a10ab43be224a455572d0
+# Get latest Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Set working directory
 WORKDIR /var/www/html
 
+# Copy application files
+COPY backend/ /var/www/html/
+
+# Install dependencies
+RUN composer install --no-dev --optimize-autoloader
+
 # Copy nginx configuration
 COPY docker/nginx.conf /etc/nginx/sites-available/default
 
-<<<<<<< HEAD
-# Copy start script
-=======
-# Definir permissões
+# Set permissions
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Expor porta 80
-EXPOSE 80
-
-# Script de inicialização para executar nginx e php-fpm
->>>>>>> e03ce5d4a7cf4749095a10ab43be224a455572d0
-COPY docker/start.sh /usr/local/bin/start.sh
-RUN chmod +x /usr/local/bin/start.sh
+# Create startup script directly in Dockerfile
+RUN echo '#!/bin/bash' > /start.sh && \
+    echo 'echo "Iniciando aplicacao..."' >> /start.sh && \
+    echo 'cd /var/www/html' >> /start.sh && \
+    echo 'php artisan serve --host=0.0.0.0 --port=80' >> /start.sh && \
+    chmod +x /start.sh
 
 # Expose port
 EXPOSE 80
 
 # Start services
-CMD ["/usr/local/bin/start.sh"]
+CMD ["/start.sh"]
