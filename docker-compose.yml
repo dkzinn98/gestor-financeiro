@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+version: '3.8'
+
+>>>>>>> e03ce5d4a7cf4749095a10ab43be224a455572d0
 services:
   # PostgreSQL Database
   db:
@@ -23,15 +28,23 @@ services:
     container_name: dk_transactions_backend
     environment:
       - APP_ENV=production
+<<<<<<< HEAD
       - APP_DEBUG=true
+=======
+      - APP_DEBUG=false
+>>>>>>> e03ce5d4a7cf4749095a10ab43be224a455572d0
       - DB_CONNECTION=pgsql
       - DB_HOST=db
       - DB_PORT=5432
       - DB_DATABASE=dk_transactions
       - DB_USERNAME=postgres
       - DB_PASSWORD=postgres123
+<<<<<<< HEAD
     volumes:
       - ./backend:/var/www/html
+=======
+      - RUN_MIGRATIONS=true
+>>>>>>> e03ce5d4a7cf4749095a10ab43be224a455572d0
     ports:
       - "8000:80"
     depends_on:
@@ -45,4 +58,8 @@ volumes:
 
 networks:
   dk_network:
+<<<<<<< HEAD
     driver: bridge
+=======
+    driver: bridge
+>>>>>>> e03ce5d4a7cf4749095a10ab43be224a455572d0

@@ -1,5 +1,6 @@
 #!/bin/bash
 
+<<<<<<< HEAD
 # Wait for database
 echo "Waiting for database..."
 sleep 10
@@ -36,4 +37,21 @@ echo "Starting nginx..."
 service nginx start
 
 echo "Starting php-fpm..."
+=======
+# Aguardar banco de dados ficar pronto
+echo "Aguardando banco de dados..."
+sleep 10
+
+# Executar migrações se necessário
+if [ "$RUN_MIGRATIONS" = "true" ]; then
+    echo "Executando migrações..."
+    php artisan migrate --force
+fi
+
+# Iniciar serviços
+echo "Iniciando nginx..."
+service nginx start
+
+echo "Iniciando php-fpm..."
+>>>>>>> e03ce5d4a7cf4749095a10ab43be224a455572d0
 php-fpm

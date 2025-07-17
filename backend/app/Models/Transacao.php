@@ -9,32 +9,25 @@ class Transacao extends Model
 {
     use HasFactory;
 
-    // Especifica o nome da tabela correta (a que foi criada na migração)
-    protected $table = 'transacaos';
+    protected $table = 'transacoes';
 
-    // Campos preenchíveis em massa
     protected $fillable = [
         'descricao',
         'valor',
         'tipo',
         'categoria_id',
-        'data_transacao',
         'user_id'
     ];
 
-    // Conversão de tipos
     protected $casts = [
-        'valor' => 'float',
-        'data_transacao' => 'date',
+        'valor' => 'decimal:2',
     ];
 
-    // Relação com a categoria
     public function categoria()
     {
         return $this->belongsTo(Categoria::class);
     }
 
-    // Relação com o usuário
     public function user()
     {
         return $this->belongsTo(User::class);
