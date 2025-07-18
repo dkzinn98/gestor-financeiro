@@ -16,11 +16,13 @@ class Transacao extends Model
         'valor',
         'tipo',
         'categoria_id',
-        'user_id'
+        'user_id',
+        'data_transacao'  // Adicionar esta linha
     ];
 
     protected $casts = [
         'valor' => 'decimal:2',
+        'data_transacao' => 'date'  // Adicionar cast para data
     ];
 
     public function categoria()

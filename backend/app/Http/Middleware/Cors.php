@@ -29,30 +29,18 @@ class Cors
         // Se for uma requisição OPTIONS (preflight), retorna resposta rápida com cabeçalhos CORS
         if ($request->isMethod('OPTIONS')) {
             $response = new Response('', 200);
-            
-            if ($allowOrigin) {
-                // Define todos os cabeçalhos CORS para resposta preflight
-                $response->headers->set('Access-Control-Allow-Origin', $allowOrigin);
-                $response->headers->set('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
-                $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, X-CSRF-TOKEN, X-XSRF-TOKEN, Accept, Origin');
-                $response->headers->set('Access-Control-Allow-Credentials', 'true');
-                $response->headers->set('Access-Control-Max-Age', '86400'); // 24 horas
-            }
-            
-            return $response;
+        } else {
+            // Para requisições não-OPTIONS, continua com o fluxo normal
+            $response = $next($request);
         }
         
-        // Para requisições não-OPTIONS, continua com o fluxo normal
-        $response = $next($request);
-        
-        // Aplica os cabeçalhos CORS à resposta
+        // Aplica os cabeçalhos CORS à resposta SEMPRE quando origem é permitida
         if ($allowOrigin) {
             $response->headers->set('Access-Control-Allow-Origin', $allowOrigin);
             $response->headers->set('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
             $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, X-CSRF-TOKEN, X-XSRF-TOKEN, Accept, Origin');
             $response->headers->set('Access-Control-Allow-Credentials', 'true');
-            
-            // Cache para navegadores
+            $response->headers->set('Access-Control-Max-Age', '86400'); // 24 horas
             $response->headers->set('Vary', 'Origin');
         }
         
