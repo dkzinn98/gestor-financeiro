@@ -1,49 +1,74 @@
-// src/app/interceptors/auth.interceptor.ts
-import { Injectable } from '@angular/core';
-import {
-  HttpRequest,
-  HttpHandler,
-  HttpEvent,
-  HttpInterceptor,
-  HttpErrorResponse
-} from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { catchError, switchMap, throwError } from 'rxjs';
 import { AuthService } from '../services/auth.service';
-import { Router } from '@angular/router';
 
-@Injectable()
-export class AuthInterceptor implements HttpInterceptor {
-
-  constructor(private authService: AuthService, private router: Router) {}
-
-  intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    // Obter o token de autenticação
-    const token = this.authService.getToken();
+export const authInterceptor: HttpInterceptorFn = (req, next) => {
+  const authService = inject(AuthService);
+  
+  console.log('🔄 Interceptor: Processando requisição para:', req.url);
+  
+  // URLs que não precisam de autenticação
+  const publicUrls = ['/login', '/register', '/forgot-password'];
+  const isPublicUrl = publicUrls.some(url => req.url.includes(url));
+  
+  let authReq = req;
+  
+  // Se não for uma URL pública, anexar o token
+  if (!isPublicUrl) {
+    const token = authService.getToken();
+    console.log('🔑 Interceptor: Token encontrado:', token ? 'SIM' : 'NÃO');
     
-    // Se houver um token, adicione-o ao cabeçalho da requisição
     if (token) {
-      request = request.clone({
+      authReq = req.clone({
         setHeaders: {
           Authorization: `Bearer ${token}`
         }
       });
+      console.log('✅ Interceptor: Token anexado à requisição');
+      console.log('📋 Interceptor: Header Authorization:', `Bearer ${token.substring(0, 20)}...`);
+    } else {
+      console.warn('⚠️  Interceptor: Nenhum token encontrado para requisição autenticada');
     }
-    
-    // Processar a requisição e lidar com erros de autenticação
-    return next.handle(request).pipe(
-      catchError((error: HttpErrorResponse) => {
-        // Se receber erro 401 (Não Autorizado) ou 403 (Proibido), significa que o token pode ter expirado
-        if (error.status === 401 || error.status === 403) {
-          // Limpar dados de autenticação
-          this.authService.clearAuthData();
-          
-          // Redirecionar para a página de login
-          this.router.navigate(['/login']);
-        }
-        
-        return throwError(() => error);
-      })
-    );
+  } else {
+    console.log('🌐 Interceptor: URL pública, sem autenticação necessária');
   }
-}
+  
+  // Processar a requisição e tratar erros 401
+  return next(authReq).pipe(
+    catchError((error: HttpErrorResponse) => {
+      console.log('❌ Interceptor: Erro capturado:', error.status, error.message);
+      
+      // Se for erro 401 (Unauthorized) e não for na rota de login
+      if (error.status === 401 && !isPublicUrl) {
+        console.log('🔄 Interceptor: Token expirado detectado, tentando renovar...');
+        
+        // Tentar renovar o token automaticamente
+        return authService.refreshToken().pipe(
+          switchMap((response: any) => {
+            console.log('✅ Interceptor: Token renovado com sucesso, repetindo requisição');
+            
+            // Clonar a requisição original com o novo token
+            const newReq = req.clone({
+              setHeaders: {
+                Authorization: `Bearer ${response.access_token}`
+              }
+            });
+            
+            // Repetir a requisição original com o novo token
+            return next(newReq);
+          }),
+          catchError((refreshError) => {
+            console.error('❌ Interceptor: Falha na renovação automática', refreshError);
+            
+            // Se falhar na renovação, fazer logout
+            authService.doLogout();
+            return throwError(() => error);
+          })
+        );
+      }
+      
+      return throwError(() => error);
+    })
+  );
+};

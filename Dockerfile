@@ -27,13 +27,19 @@ WORKDIR /var/www/html
 COPY backend/ /var/www/html/
 
 # Install dependencies
-RUN composer install --no-dev --optimize-autoloader
+RUN composer install --no-dev --optimize-autoloader --ignore-platform-reqs
 
 # Copy nginx configuration
 COPY docker/nginx.conf /etc/nginx/sites-available/default
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+
+# Clear Laravel caches (ADICIONADO)
+RUN php artisan config:clear || true
+RUN php artisan cache:clear || true
+RUN php artisan route:clear || true
+RUN php artisan view:clear || true
 
 # Create startup script directly in Dockerfile
 RUN echo '#!/bin/bash' > /start.sh && \
@@ -46,4 +52,4 @@ RUN echo '#!/bin/bash' > /start.sh && \
 EXPOSE 80
 
 # Start services
-CMD ["/start.sh"]
+CMD ["/start.sh"] 

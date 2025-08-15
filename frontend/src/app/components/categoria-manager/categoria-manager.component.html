@@ -1,0 +1,155 @@
+<div class="categoria-manager-container">
+  <mat-card class="form-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>category</mat-icon>
+        {{ editMode ? 'Editar Categoria' : 'Nova Categoria' }}
+      </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="categoriaForm" (ngSubmit)="onSubmit()">
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Nome da Categoria</mat-label>
+            <input 
+              matInput 
+              formControlName="nome" 
+              placeholder="Ex: Alimentação, Salário..."
+              maxlength="255">
+            <mat-error *ngIf="categoriaForm.get('nome')?.invalid && categoriaForm.get('nome')?.touched">
+              {{ getErrorMessage('nome') }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Tipo</mat-label>
+            <mat-select formControlName="tipo">
+              <mat-option value="receita">
+                <mat-icon color="primary">trending_up</mat-icon>
+                Receita
+              </mat-option>
+              <mat-option value="despesa">
+                <mat-icon color="warn">trending_down</mat-icon>
+                Despesa
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Descrição (Opcional)</mat-label>
+            <textarea 
+              matInput 
+              formControlName="descricao" 
+              placeholder="Descrição da categoria..."
+              rows="3">
+            </textarea>
+          </mat-form-field>
+        </div>
+
+        <div class="form-actions">
+          <button 
+            mat-raised-button 
+            color="primary" 
+            type="submit"
+            [disabled]="loading">
+            <mat-icon>{{ editMode ? 'edit' : 'add' }}</mat-icon>
+            {{ editMode ? 'Atualizar' : 'Criar' }}
+          </button>
+
+          <button 
+            mat-button 
+            type="button" 
+            (click)="resetForm()"
+            [disabled]="loading">
+            <mat-icon>clear</mat-icon>
+            Limpar
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="list-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>list</mat-icon>
+        Categorias Cadastradas
+      </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div *ngIf="loading" class="loading-container">
+        <mat-spinner diameter="40"></mat-spinner>
+        <p>Carregando categorias...</p>
+      </div>
+
+      <div *ngIf="!loading && categorias.length === 0" class="empty-state">
+        <mat-icon>category</mat-icon>
+        <h3>Nenhuma categoria encontrada</h3>
+        <p>Crie sua primeira categoria usando o formulário acima.</p>
+      </div>
+
+      <table mat-table [dataSource]="categorias" *ngIf="!loading && categorias.length > 0" class="categorias-table">
+        
+        <!-- Coluna Nome -->
+        <ng-container matColumnDef="nome">
+          <th mat-header-cell *matHeaderCellDef>Nome</th>
+          <td mat-cell *matCellDef="let categoria">
+            <strong>{{ categoria.nome }}</strong>
+          </td>
+        </ng-container>
+
+        <!-- Coluna Tipo -->
+        <ng-container matColumnDef="tipo">
+          <th mat-header-cell *matHeaderCellDef>Tipo</th>
+          <td mat-cell *matCellDef="let categoria">
+            <mat-chip 
+              [color]="categoria.tipo === 'receita' ? 'primary' : 'warn'"
+              selected>
+              <mat-icon>{{ categoria.tipo === 'receita' ? 'trending_up' : 'trending_down' }}</mat-icon>
+              {{ categoria.tipo | titlecase }}
+            </mat-chip>
+          </td>
+        </ng-container>
+
+        <!-- Coluna Descrição -->
+        <ng-container matColumnDef="descricao">
+          <th mat-header-cell *matHeaderCellDef>Descrição</th>
+          <td mat-cell *matCellDef="let categoria">
+            <span class="descricao">{{ categoria.descricao || '-' }}</span>
+          </td>
+        </ng-container>
+
+        <!-- Coluna Ações -->
+        <ng-container matColumnDef="acoes">
+          <th mat-header-cell *matHeaderCellDef>Ações</th>
+          <td mat-cell *matCellDef="let categoria">
+            <button 
+              mat-icon-button 
+              color="primary"
+              (click)="editCategoria(categoria)"
+              matTooltip="Editar categoria">
+              <mat-icon>edit</mat-icon>
+            </button>
+            
+            <button 
+              mat-icon-button 
+              color="warn"
+              (click)="deleteCategoria(categoria.id!)"
+              matTooltip="Deletar categoria">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+</div>

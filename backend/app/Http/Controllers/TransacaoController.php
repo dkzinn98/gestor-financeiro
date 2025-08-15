@@ -29,13 +29,46 @@ class TransacaoController extends Controller
     public function store(Request $request)
     {
         try {
+            // Debug: Ver dados originais
+            \Log::info('Dados originais recebidos:', $request->all());
+            
             $dados = $request->all();
+            
+            // Mapear campos inglês para português
+            if (isset($dados['description'])) {
+                $dados['descricao'] = $dados['description'];
+                unset($dados['description']);
+            }
+            
+            if (isset($dados['amount'])) {
+                $dados['valor'] = $dados['amount'];
+                unset($dados['amount']);
+            }
+            
+            if (isset($dados['type'])) {
+                $dados['tipo'] = $dados['type'];
+                unset($dados['type']);
+            }
+            
+            if (isset($dados['category_id'])) {
+                $dados['categoria_id'] = $dados['category_id'];
+                unset($dados['category_id']);
+            }
+            
+            // Remover campos desnecessários
+            unset($dados['transaction_date']);
+            
+            // Adicionar user_id do usuário autenticado
             $dados['user_id'] = Auth::id();
+            
+            // Debug: Ver dados após mapeamento
+            \Log::info('Dados após mapeamento:', $dados);
             
             $transacao = Transacao::create($dados);
             
             return response()->json($transacao, 201);
         } catch (\Exception $e) {
+            \Log::error('Erro ao criar transação:', ['error' => $e->getMessage()]);
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
@@ -68,7 +101,33 @@ class TransacaoController extends Controller
                 return response()->json(['message' => 'Transação não encontrada'], 404);
             }
             
-            $transacao->update($request->all());
+            $dados = $request->all();
+            
+            // Mapear campos inglês para português
+            if (isset($dados['description'])) {
+                $dados['descricao'] = $dados['description'];
+                unset($dados['description']);
+            }
+            
+            if (isset($dados['amount'])) {
+                $dados['valor'] = $dados['amount'];
+                unset($dados['amount']);
+            }
+            
+            if (isset($dados['type'])) {
+                $dados['tipo'] = $dados['type'];
+                unset($dados['type']);
+            }
+            
+            if (isset($dados['category_id'])) {
+                $dados['categoria_id'] = $dados['category_id'];
+                unset($dados['category_id']);
+            }
+            
+            // Remover campos desnecessários
+            unset($dados['transaction_date']);
+            
+            $transacao->update($dados);
             
             return response()->json($transacao);
         } catch (\Exception $e) {

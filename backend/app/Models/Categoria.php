@@ -13,12 +13,23 @@ class Categoria extends Model
     protected $table = 'categorias';
 
     // Campos preenchíveis em massa
-    protected $fillable = ['nome', 'tipo'];
+    protected $fillable = [
+        'nome', 
+        'tipo', 
+        'descricao', 
+        'user_id'
+    ];
 
     // Relação com transações - importante para garantir que o Eloquent saiba como relacionar as duas tabelas
     public function transacoes()
     {
         // Usando o nome correto da tabela 'transacaos'
         return $this->hasMany(Transacao::class);
+    }
+
+    // Relação com usuário
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

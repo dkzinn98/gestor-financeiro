@@ -115,8 +115,21 @@ export class TransactionService {
         );
     }
 
-    // Criar nova transação
+    // CORRIGIDO: Criar nova transação com logs para debug
     createTransaction(transaction: Partial<Transaction>): Observable<Transaction> {
+        console.log('=== DEBUG CREATETRANSACTION ===');
+        console.log('Dados recebidos:', transaction);
+        
+        // Validação adicional
+        if (!transaction.description || !transaction.amount || !transaction.type || !transaction.category_id) {
+            console.error('Dados obrigatórios faltando:', {
+                description: transaction.description,
+                amount: transaction.amount,
+                type: transaction.type,
+                category_id: transaction.category_id
+            });
+        }
+        
         // Mapeando os campos para o formato que a API Laravel espera
         const transactionData = {
             descricao: transaction.description,
@@ -125,25 +138,41 @@ export class TransactionService {
             categoria_id: transaction.category_id
         };
 
+        console.log('Dados mapeados para API:', transactionData);
+        console.log('URL da API:', this.apiUrl);
+        
+        const headers = this.authService.getAuthHeaders();
+        console.log('Headers enviados:', headers);
+
         return this.http.post<any>(this.apiUrl, transactionData, {
-            headers: this.authService.getAuthHeaders()
+            headers: headers
         }).pipe(
-            map(t => ({
-                id: t.id,
-                description: t.descricao || t.description || '',
-                amount: parseFloat(t.valor || t.amount || 0),
-                type: t.tipo || t.type || '',
-                category_id: t.categoria_id || t.category_id || 0,
-                category_name: t.category_name || t.nome_categoria || '',
-                transaction_date: t.data_transacao || t.transaction_date || t.created_at || '',
-                created_at: t.created_at || '',
-                updated_at: t.updated_at || ''
-            } as Transaction))
+            map(t => {
+                console.log('✅ Resposta da API recebida:', t);
+                
+                const mappedResponse = {
+                    id: t.id,
+                    description: t.descricao || t.description || '',
+                    amount: parseFloat(t.valor || t.amount || 0),
+                    type: t.tipo || t.type || '',
+                    category_id: t.categoria_id || t.category_id || 0,
+                    category_name: t.category_name || t.nome_categoria || '',
+                    transaction_date: t.data_transacao || t.transaction_date || t.created_at || '',
+                    created_at: t.created_at || '',
+                    updated_at: t.updated_at || ''
+                } as Transaction;
+                
+                console.log('✅ Resposta mapeada final:', mappedResponse);
+                return mappedResponse;
+            })
         );
     }
 
     // Atualizar transação existente
     updateTransaction(id: number, transaction: Partial<Transaction>): Observable<Transaction> {
+        console.log('=== DEBUG UPDATETRANSACTION ===');
+        console.log('ID:', id, 'Dados:', transaction);
+        
         // Mapeando os campos para o formato que a API Laravel espera
         const transactionData = {
             descricao: transaction.description,
@@ -152,25 +181,34 @@ export class TransactionService {
             categoria_id: transaction.category_id
         };
 
+        console.log('Dados mapeados para API:', transactionData);
+
         return this.http.put<any>(`${this.apiUrl}/${id}`, transactionData, {
             headers: this.authService.getAuthHeaders()
         }).pipe(
-            map(t => ({
-                id: t.id,
-                description: t.descricao || t.description || '',
-                amount: parseFloat(t.valor || t.amount || 0),
-                type: t.tipo || t.type || '',
-                category_id: t.categoria_id || t.category_id || 0,
-                category_name: t.category_name || t.nome_categoria || '',
-                transaction_date: t.data_transacao || t.transaction_date || t.created_at || '',
-                created_at: t.created_at || '',
-                updated_at: t.updated_at || ''
-            } as Transaction))
+            map(t => {
+                console.log('✅ Resposta UPDATE da API:', t);
+                
+                return {
+                    id: t.id,
+                    description: t.descricao || t.description || '',
+                    amount: parseFloat(t.valor || t.amount || 0),
+                    type: t.tipo || t.type || '',
+                    category_id: t.categoria_id || t.category_id || 0,
+                    category_name: t.category_name || t.nome_categoria || '',
+                    transaction_date: t.data_transacao || t.transaction_date || t.created_at || '',
+                    created_at: t.created_at || '',
+                    updated_at: t.updated_at || ''
+                } as Transaction;
+            })
         );
     }
 
     // Deletar transação
     deleteTransaction(id: number): Observable<void> {
+        console.log('=== DEBUG DELETETRANSACTION ===');
+        console.log('Deletando transação ID:', id);
+        
         return this.http.delete<void>(`${this.apiUrl}/${id}`, {
             headers: this.authService.getAuthHeaders()
         });

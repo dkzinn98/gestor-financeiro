@@ -155,9 +155,18 @@
   align-items: center;
   padding: 16px;
   border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.2s;
 
   &:last-child {
     border-bottom: none;
+  }
+
+  &:hover {
+    background-color: #f9f9f9;
+    
+    .transaction-actions {
+      opacity: 1;
+    }
   }
 }
 
@@ -197,6 +206,7 @@
 
 .transaction-info {
   text-align: right;
+  margin-right: 16px;
 
   .transaction-amount {
     font-weight: 500;
@@ -218,6 +228,21 @@
   }
 }
 
+.transaction-actions {
+  display: flex;
+  align-items: center;
+  opacity: 0.3;
+  transition: opacity 0.2s;
+  
+  button {
+    margin-left: 4px;
+    
+    &:first-child {
+      margin-left: 0;
+    }
+  }
+}
+
 .action-buttons {
   display: flex;
   justify-content: center;
@@ -226,6 +251,12 @@
 
   a {
     flex: 1;
+    transition: transform 0.2s, box-shadow 0.2s;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
 
     mat-icon {
       margin-right: 8px;
@@ -237,48 +268,102 @@
   flex: 1;
 }
 
+// Responsividade
 @media (max-width: 768px) {
+  .dashboard-container {
+    padding: 16px;
+  }
+
   .summary-cards {
     grid-template-columns: 1fr;
+    gap: 12px;
   }
 
   .action-buttons {
     flex-direction: column;
-  }
+    gap: 12px;
 
-  .transaction-actions {
-    display: flex;
-    align-items: center;
-    margin-left: 8px;
-    
-    button {
-      margin-left: 4px;
+    a {
+      flex: none;
+      width: 100%;
     }
   }
-  
+
   .transaction-item {
-    display: flex;
-    align-items: center;
-    padding: 16px;
-    border-bottom: 1px solid #f0f0f0;
-    
-    &:last-child {
-      border-bottom: none;
-    }
-    
-    &:hover {
-      background-color: #f9f9f9;
-      
-      .transaction-actions {
-        opacity: 1;
-      }
-    }
-  }
-  
-  /* Opcional: Você pode fazer os botões aparecerem apenas no hover */
-  .transaction-actions {
-    opacity: 0.3;
-    transition: opacity 0.2s;
+    padding: 12px;
   }
 
+  .transaction-actions {
+    opacity: 1; // Sempre visível no mobile
+  }
+
+  .transaction-info {
+    margin-right: 8px;
+  }
+
+  .card-info {
+    .amount {
+      font-size: 20px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-title {
+    font-size: 24px;
+    text-align: center;
+  }
+
+  .summary-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .transaction-item {
+    flex-wrap: wrap;
+    
+    .transaction-details,
+    .transaction-info {
+      flex: 1 0 100%;
+      text-align: left;
+      margin-right: 0;
+    }
+
+    .transaction-info {
+      margin-top: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .transaction-actions {
+      margin-top: 8px;
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}
+
+// Animações
+.summary-card,
+.recent-transactions-card,
+.quick-actions-card {
+  animation: slideInUp 0.3s ease-out;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Estados de loading melhorados
+.loading-container {
+  mat-spinner {
+    margin-bottom: 16px;
+  }
 }

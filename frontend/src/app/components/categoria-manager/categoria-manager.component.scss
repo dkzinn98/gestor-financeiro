@@ -1,0 +1,221 @@
+.categoria-manager-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.form-card, .list-card {
+  margin-bottom: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+}
+
+.form-card {
+  mat-card-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    margin: -16px -16px 20px -16px;
+    padding: 20px;
+    border-radius: 12px 12px 0 0;
+
+    mat-card-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0;
+      font-size: 1.4rem;
+      font-weight: 500;
+    }
+  }
+}
+
+.list-card {
+  mat-card-header {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+    margin: -16px -16px 20px -16px;
+    padding: 20px;
+    border-radius: 12px 12px 0 0;
+
+    mat-card-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0;
+      font-size: 1.4rem;
+      font-weight: 500;
+    }
+  }
+}
+
+.form-row {
+  margin-bottom: 15px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-start;
+  margin-top: 20px;
+
+  button {
+    min-width: 120px;
+    height: 45px;
+    border-radius: 8px;
+    font-weight: 500;
+    text-transform: none;
+
+    mat-icon {
+      margin-right: 8px;
+    }
+  }
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  text-align: center;
+
+  mat-spinner {
+    margin-bottom: 20px;
+  }
+
+  p {
+    color: #666;
+    margin: 0;
+  }
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  color: #666;
+
+  mat-icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    margin-bottom: 20px;
+    opacity: 0.5;
+  }
+
+  h3 {
+    margin: 0 0 10px 0;
+    font-weight: 500;
+  }
+
+  p {
+    margin: 0;
+    opacity: 0.8;
+  }
+}
+
+.categorias-table {
+  width: 100%;
+  margin-top: 20px;
+
+  .mat-column-nome {
+    width: 25%;
+  }
+
+  .mat-column-tipo {
+    width: 20%;
+  }
+
+  .mat-column-descricao {
+    width: 35%;
+  }
+
+  .mat-column-acoes {
+    width: 20%;
+    text-align: center;
+  }
+
+  .descricao {
+    color: #666;
+    font-style: italic;
+  }
+
+  mat-chip {
+    font-weight: 500;
+    
+    mat-icon {
+      margin-right: 5px;
+      font-size: 18px;
+    }
+  }
+
+  button {
+    margin: 0 5px;
+  }
+}
+
+// Responsividade
+@media (max-width: 768px) {
+  .categoria-manager-container {
+    padding: 10px;
+  }
+
+  .form-actions {
+    flex-direction: column;
+
+    button {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+  }
+
+  .categorias-table {
+    .mat-column-descricao {
+      display: none;
+    }
+  }
+}
+
+// Animações
+.form-card, .list-card {
+  animation: slideInUp 0.3s ease-out;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Estados do formulário
+.mat-form-field {
+  .mat-form-field-outline {
+    transition: all 0.3s ease;
+  }
+
+  &.mat-focused .mat-form-field-outline-thick {
+    border-width: 3px;
+  }
+}
+
+// Hover effects
+button {
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+}
