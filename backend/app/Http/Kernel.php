@@ -8,27 +8,32 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 class Kernel extends ConsoleKernel
 {
     /**
-     * Registre aqui seus comandos de console personalizados.
+     * Comandos de console registrados manualmente (opcional).
+     * Observação: como também fazemos $this->load(__DIR__.'/Commands'),
+     * os comandos dentro de app/Console/Commands serão descobertos automaticamente.
      */
     protected $commands = [
         \App\Console\Commands\SeedDefaultCategories::class,
     ];
 
     /**
-     * Agendador (opcional).
+     * Defina a agenda de comandos (opcional).
      */
     protected function schedule(Schedule $schedule): void
     {
-        // Ex.: rodar diariamente se quiser reforçar defaults para todos
+        // Exemplo: reforçar categorias padrão diariamente (se desejar)
         // $schedule->command('categories:seed-defaults')->daily();
     }
 
     /**
-     * Bootstrap do kernel de console.
+     * Registra os comandos do aplicativo.
      */
     protected function commands(): void
     {
-        $this->load(__DIR__.'/Commands');
-        // require base_path('routes/console.php');
+        // Carrega todos os comandos em app/Console/Commands
+        $this->load(__DIR__ . '/Commands');
+
+        // Mantém a rota de console padrão do Laravel
+        require base_path('routes/console.php');
     }
 }
