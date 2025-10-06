@@ -4,32 +4,36 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 
 class Categoria extends Model
 {
     use HasFactory;
 
-    // Especificar o nome da tabela explicitamente (opcional, mas recomendado para consistência)
     protected $table = 'categorias';
 
-    // Campos preenchíveis em massa
-    protected $fillable = [
-        'nome', 
-        'tipo', 
-        'descricao', 
-        'user_id'
-    ];
+    protected $fillable = ['nome', 'tipo', 'descricao', 'user_id'];
 
-    // Relação com transações - importante para garantir que o Eloquent saiba como relacionar as duas tabelas
+    // Categoria -> Transações (FK: transacoes.categoria_id)
     public function transacoes()
     {
-        // Usando o nome correto da tabela 'transacaos'
-        return $this->hasMany(Transacao::class);
+        return $this->hasMany(Transacao::class, 'categoria_id', 'id');
     }
 
-    // Relação com usuário
+    // Categoria -> Usuário (FK: categorias.user_id)
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Escopo: filtra categorias do usuário.
+     * Uso: Categoria::doUsuario()->get();
+     *      Categoria::doUsuario($algumId)->get();
+     */
+    public function scopeDoUsuario(Builder $query, ?int $userId = null): Builder
+    {
+        return $query->where('user_id', $userId ?? Auth::id());
     }
 }

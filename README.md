@@ -170,4 +170,4 @@ Este projeto está sob a licença [MIT](LICENSE).
 
 ---
 
-## 💡 Desenvolvido por: Deryk Silva | @dkode.js
+## 💡 Desenvolvido por: Deryk Silva | @dkode.php
