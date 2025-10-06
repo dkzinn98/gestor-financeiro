@@ -19,12 +19,12 @@ class Transacao extends Model
         'tipo',           // 'receita' | 'despesa'
         'categoria_id',
         'user_id',
-        'data_transacao',
+        // 'data_transacao',
     ];
 
     protected $casts = [
         'valor'          => 'decimal:2',
-        'data_transacao' => 'date', // usa Y-m-d por padrão
+        // 'data_transacao' => 'date', // usa Y-m-d por padrão
     ];
 
     /** Relacionamentos */

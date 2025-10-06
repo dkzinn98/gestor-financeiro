@@ -1,34 +1,40 @@
 import { Routes } from '@angular/router';
-import { TransacaoListComponent } from './components/transacao-list/transacao-list.component';
-import { TransacaoFormComponent } from './components/transacao-form/transacao-form.component';
-import { CategoriaManagerComponent } from './components/categoria-manager/categoria-manager.component';
-import { LoginComponent } from './components/login/login.component';
-import { RegisterComponent } from './components/register/register.component';
 import { authGuard } from './guards/auth.guard';
 
-
 export const routes: Routes = [
-  { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
-  { 
-    path: '', 
-    component: TransacaoListComponent, // Esta é a rota principal - dashboard/lista de transações
-    canActivate: [authGuard]
+  {
+    path: 'login',
+    loadComponent: () =>
+      import('./components/login/login.component').then(m => m.LoginComponent)
   },
-  { 
-    path: 'nova-transacao', 
-    component: TransacaoFormComponent,
-    canActivate: [authGuard]
+  {
+    path: 'register',
+    loadComponent: () =>
+      import('./components/register/register.component').then(m => m.RegisterComponent)
   },
-  { 
-    path: 'nova-transacao/:id', 
-    component: TransacaoFormComponent,
-    canActivate: [authGuard]
+  {
+    path: '',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./components/transacao-list/transacao-list.component').then(m => m.TransacaoListComponent)
+  },
+  {
+    path: 'nova-transacao',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./components/transacao-form/transacao-form.component').then(m => m.TransacaoFormComponent)
+  },
+  {
+    path: 'nova-transacao/:id',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./components/transacao-form/transacao-form.component').then(m => m.TransacaoFormComponent)
   },
   {
     path: 'categorias',
-    component: CategoriaManagerComponent,
-    canActivate: [authGuard]
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./components/categoria-manager/categoria-manager.component').then(m => m.CategoriaManagerComponent)
   },
   { path: '**', redirectTo: '' }
 ];

@@ -1,108 +1,112 @@
 import { Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
+import { finalize } from 'rxjs/operators';
+
 import { AuthService } from '../../services/auth.service';
-import { Router } from '@angular/router';
+
+type RegisterPayload = {
+  name: string;
+  email: string;
+  password: string;
+  password_confirmation: string;
+};
 
 @Component({
   selector: 'app-register',
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss'],
   standalone: true,
-  imports: [FormsModule, CommonModule, RouterModule]
+  imports: [CommonModule, FormsModule, RouterModule],
+  templateUrl: './register.component.html',
+  styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent implements OnInit {
-  userData = { 
+  userData: RegisterPayload = {
     name: '',
-    email: '', 
+    email: '',
     password: '',
     password_confirmation: ''
   };
+
   errorMessage: string | null = null;
-  isLoading: boolean = false;
-  
+  isLoading = false;
+
   constructor(
-    private authService: AuthService, 
+    private authService: AuthService,
     private router: Router
   ) {}
-  
-  ngOnInit() {
-    // Se já estiver logado, redirecionar
+
+  ngOnInit(): void {
+    // Se já estiver logado, redireciona para a home
     if (this.authService.isLoggedIn()) {
       this.router.navigate(['/']);
     }
   }
 
-  register() {
-    // Validação básica
+  register(): void {
+    // validações básicas
     if (!this.userData.name || !this.userData.email || !this.userData.password) {
       this.errorMessage = 'Todos os campos são obrigatórios.';
       return;
     }
-    
-    // Validação de formato de email
-    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+
+    // formato de email
+    const emailPattern = /^[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}$/;
     if (!emailPattern.test(this.userData.email)) {
       this.errorMessage = 'Por favor, insira um email válido.';
       return;
     }
-    
-    // Validação de senha
+
+    // senha mínima
     if (this.userData.password.length < 6) {
       this.errorMessage = 'A senha deve ter pelo menos 6 caracteres.';
       return;
     }
-    
-    // Validar se as senhas coincidem
+
+    // confirmação de senha
     if (this.userData.password !== this.userData.password_confirmation) {
       this.errorMessage = 'As senhas não coincidem.';
       return;
     }
-    
-    this.isLoading = true;
+
     this.errorMessage = null;
-    
+    this.isLoading = true;
+
     console.log('Enviando dados para registro:', this.userData);
-    
-    this.authService.register(this.userData).subscribe({
-      next: (response) => {
-        console.log('Registro bem-sucedido:', response);
-        // Sucesso no registro, redirecionar para a página de login com mensagem de sucesso
-        this.router.navigate(['/login'], { 
-          queryParams: { registered: 'success' } 
-        });
-      },
-      error: (error) => {
-        this.isLoading = false;
-        console.error('Erro completo no registro:', error);
-        
-        // Tratamento de erros específicos
-        if (error.status === 422) {
-          // Tratando erros de validação
-          if (error.error && error.error.errors) {
-            const errorMessages: string[] = [];
-            
-            Object.entries(error.error.errors).forEach(([field, messages]) => {
-              if (Array.isArray(messages) && messages.length > 0) {
-                errorMessages.push(messages[0] as string);
-              } else if (typeof messages === 'string') {
-                errorMessages.push(messages);
-              }
-            });
-            
-            this.errorMessage = errorMessages.join('<br>');
-          } else if (error.error && error.error.message) {
-            this.errorMessage = error.error.message;
+
+    this.authService.register(this.userData)
+      .pipe(finalize(() => (this.isLoading = false)))
+      .subscribe({
+        next: (response) => {
+          console.log('Registro bem-sucedido:', response);
+          // após registrar, manda para login com flag de sucesso
+          this.router.navigate(['/login'], { queryParams: { registered: 'success' } });
+        },
+        error: (error) => {
+          console.error('Erro completo no registro:', error);
+
+          if (error.status === 422) {
+            if (error.error?.errors) {
+              const msgs: string[] = [];
+              Object.entries(error.error.errors).forEach(([_, messages]) => {
+                if (Array.isArray(messages) && messages.length > 0) {
+                  msgs.push(String(messages[0]));
+                } else if (typeof messages === 'string') {
+                  msgs.push(messages);
+                }
+              });
+              this.errorMessage = msgs.join('<br>');
+            } else if (error.error?.message) {
+              this.errorMessage = error.error.message;
+            } else {
+              this.errorMessage = 'Dados inválidos. Por favor, verifique as informações.';
+            }
+          } else if (error.status === 0) {
+            this.errorMessage = 'Não foi possível conectar ao servidor. Verifique sua conexão de internet.';
           } else {
-            this.errorMessage = 'Dados inválidos. Por favor, verifique as informações.';
+            this.errorMessage = `Erro ao fazer registro (${error.status}). Por favor, tente novamente mais tarde.`;
           }
-        } else if (error.status === 0) {
-          this.errorMessage = 'Não foi possível conectar ao servidor. Verifique sua conexão de internet.';
-        } else {
-          this.errorMessage = `Erro ao fazer registro (${error.status}). Por favor, tente novamente mais tarde.`;
         }
-      }
-    });
+      });
   }
 }

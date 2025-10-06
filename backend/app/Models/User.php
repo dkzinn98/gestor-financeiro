@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Support\EnsureDefaultCategories;
+
 
 class User extends Authenticatable
 {
@@ -55,4 +57,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(Transacao::class);
     }
+
+    protected static function booted()
+    {
+        static::created(function (User $user) {
+            EnsureDefaultCategories::forUser($user->id);
+        });
+    }
+
 }
