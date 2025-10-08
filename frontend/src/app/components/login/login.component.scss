@@ -11,8 +11,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: #ff1493;  /* Cor sólida como fallback */
-  background: linear-gradient(135deg, #ff1493, #c715b8);  /* DeepPink to MediumVioletRed */
+  background: #242629;  /* Cor sólida como fallback */
   font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
   margin: 0;
   padding: 0;
@@ -28,7 +27,7 @@ form {
   width: 100%;
   max-width: 380px;
   padding: 40px 35px;
-  background-color: white;
+  background-color: grey;
   border-radius: 16px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -38,7 +37,7 @@ form {
 
 h2 {
   text-align: center;
-  color: #333;
+  color: #ffffff;
   margin-bottom: 30px;
   font-weight: 600;
   font-size: 22px;
@@ -52,26 +51,25 @@ label {
   display: block;
   margin-bottom: 6px;
   font-weight: 500;
-  color: #555;
-  font-size: 14px;
+  color: #ffffff;
+  font-size: 15px;
 }
 
 input {
   width: 100%;
   padding: 12px 16px;
-  border: 1px solid #e1e1e1;
+  border: 1px solid #ffffff;
   border-radius: 8px;
   font-size: 15px;
   transition: all 0.2s ease;
   outline: none;
   background-color: #f9f9f9;
   box-sizing: border-box;
-  color: #333;
 }
 
 input:focus {
-  border-color: #ff1493;
-  background-color: #fff;
+  border-color: #ffffff;
+  background-color: #ff1493;
   box-shadow: 0 0 0 3px rgba(255, 20, 147, 0.1);
 }
 
@@ -88,7 +86,7 @@ input:focus {
   margin-bottom: 0;
   font-size: 14px;
   cursor: pointer;
-  color: #666;
+  color: white;
 }
 
 .remember-me input[type="checkbox"] {
@@ -141,12 +139,13 @@ button:active {
   margin-top: 24px;
   text-align: center;
   font-size: 14px;
-  color: #666;
+  color: white;
 }
 
 .register-link a {
   color: #ff1493;
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 15px;
   text-decoration: none;
   transition: all 0.2s ease;
 }
